@@ -1,4 +1,4 @@
-package de.kingsware.md2thermal
+package de.kingsware.bonmd
 
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*

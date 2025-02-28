@@ -1,4 +1,4 @@
-package de.kingsware.md2thermal
+package de.kingsware.bonmd
 
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import com.vladsch.flexmark.html.HtmlRenderer

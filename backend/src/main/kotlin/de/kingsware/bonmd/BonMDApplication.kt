@@ -1,11 +1,11 @@
-package de.kingsware.md2thermal
+package de.kingsware.bonmd
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-open class MD2ThermalApplication
+open class BonMDApplication
 
 fun main(args: Array<String>) {
-    runApplication<MD2ThermalApplication>(*args)
+    runApplication<BonMDApplication>(*args)
 }
