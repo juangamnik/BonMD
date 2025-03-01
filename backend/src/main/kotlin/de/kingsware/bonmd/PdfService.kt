@@ -1,6 +1,7 @@
 package de.kingsware.bonmd
 
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
+import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.springframework.core.io.ClassPathResource
@@ -28,10 +29,10 @@ class PdfService {
             val fontBoldItalic = ClassPathResource("MesloLGS NF Bold Italic.ttf").inputStream
 
             // Schriftarten korrekt registrieren
-            builder.useFont({ fontRegular }, "MesloLGS", 400, PdfRendererBuilder.FontStyle.NORMAL, true)
-            builder.useFont({ fontBold }, "MesloLGS", 700, PdfRendererBuilder.FontStyle.NORMAL, true)
-            builder.useFont({ fontItalic }, "MesloLGS", 400, PdfRendererBuilder.FontStyle.ITALIC, true)
-            builder.useFont({ fontBoldItalic }, "MesloLGS", 700, PdfRendererBuilder.FontStyle.ITALIC, true)
+            builder.useFont({ fontRegular }, "MesloLGS", 400, BaseRendererBuilder.FontStyle.NORMAL, true)
+            builder.useFont({ fontBold }, "MesloLGS", 700, BaseRendererBuilder.FontStyle.NORMAL, true)
+            builder.useFont({ fontItalic }, "MesloLGS", 400, BaseRendererBuilder.FontStyle.ITALIC, true)
+            builder.useFont({ fontBoldItalic }, "MesloLGS", 700, BaseRendererBuilder.FontStyle.ITALIC, true)
 
             builder.useFastMode()
             builder.withHtmlContent(styledHtml, null)
