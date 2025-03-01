@@ -11,53 +11,67 @@ import java.io.FileOutputStream
 @Service
 class PdfService {
 
+    /**
+     * Converts Markdown content to a styled PDF file.
+     * @param mdContent The Markdown content to be converted.
+     * @return A temporary PDF file.
+     */
     fun convertMarkdownToPdf(mdContent: String): File {
-        val htmlContent = markdownToHtml(mdContent)
-        val styledHtml = generateStyledHtml(htmlContent)
+        val htmlContent = markdownToHtml(mdContent) // Convert Markdown to HTML
+        val styledHtml = generateStyledHtml(htmlContent) // Apply styling to the HTML
 
-        val tempPdfFile = File.createTempFile("bonmd", ".pdf")
+        val tempPdfFile = File.createTempFile("bonmd", ".pdf") // Create a temporary PDF file
 
         try {
             FileOutputStream(tempPdfFile).use { outputStream ->
                 val builder = PdfRendererBuilder()
 
-                // Schriftarten aus src/main/resources laden
+                // Load font files from the classpath (resources folder)
                 val fontRegular = ClassPathResource("MesloLGS NF Regular.ttf").inputStream
                 val fontBold = ClassPathResource("MesloLGS NF Bold.ttf").inputStream
                 val fontItalic = ClassPathResource("MesloLGS NF Italic.ttf").inputStream
                 val fontBoldItalic = ClassPathResource("MesloLGS NF Bold Italic.ttf").inputStream
 
-                // Schriftarten korrekt registrieren
+                // Register fonts for PDF rendering
                 builder.useFont({ fontRegular }, "MesloLGS", 400, BaseRendererBuilder.FontStyle.NORMAL, true)
                 builder.useFont({ fontBold }, "MesloLGS", 700, BaseRendererBuilder.FontStyle.NORMAL, true)
                 builder.useFont({ fontItalic }, "MesloLGS", 400, BaseRendererBuilder.FontStyle.ITALIC, true)
                 builder.useFont({ fontBoldItalic }, "MesloLGS", 700, BaseRendererBuilder.FontStyle.ITALIC, true)
 
-                // HTML rendern
-                builder.useFastMode()
-                builder.withHtmlContent(styledHtml, null)
-                builder.toStream(outputStream)
-                builder.run()
+                // Configure the PDF renderer
+                builder.useFastMode() // Enable faster rendering
+                builder.withHtmlContent(styledHtml, null) // Set the HTML content
+                builder.toStream(outputStream) // Output to the file stream
+                builder.run() // Execute the PDF generation
             }
 
-            // Zweiter Schritt (Seitenanpassung) entfällt – wir rendern direkt mit 80mm x 3276mm
-            // und geben die Datei direkt zurück
+            // Skip additional processing (e.g., page size adjustments) and return the file directly
             return tempPdfFile
 
         } finally {
-            // Falls nötig, temporäre Datei löschen (hier auskommentiert, um das Ergebnis zu behalten)
-            // tempPdfFile.delete()
+            // Delete the temporary file if necessary (not ideal, as it will be deleted before returning)
+            tempPdfFile.delete()
         }
     }
 
+    /**
+     * Converts Markdown content to basic HTML.
+     * @param mdContent The raw Markdown input.
+     * @return HTML representation of the Markdown.
+     */
     private fun markdownToHtml(mdContent: String): String {
-        val options = com.vladsch.flexmark.util.data.MutableDataSet().toImmutable()
-        val parser = com.vladsch.flexmark.parser.Parser.builder().build()
-        val renderer = com.vladsch.flexmark.html.HtmlRenderer.builder().build()
-        val document = parser.parse(mdContent)
-        return renderer.render(document)
+        val options = com.vladsch.flexmark.util.data.MutableDataSet().toImmutable() // Configure parser options
+        val parser = com.vladsch.flexmark.parser.Parser.builder().build() // Create a Markdown parser
+        val renderer = com.vladsch.flexmark.html.HtmlRenderer.builder().build() // Create an HTML renderer
+        val document = parser.parse(mdContent) // Parse Markdown into a document
+        return renderer.render(document) // Convert document to HTML
     }
 
+    /**
+     * Wraps the generated HTML in a styled template.
+     * @param htmlContent The raw HTML content.
+     * @return A complete HTML document with styles.
+     */
     private fun generateStyledHtml(htmlContent: String): String {
         return """
         <!DOCTYPE html>
@@ -66,7 +80,7 @@ class PdfService {
             <meta charset="UTF-8"/>
             <style>
                 @page {
-                    /* Direkt auf 80mm Breite und 3276mm Höhe (bspw. sehr lange Quittung) */
+                    /* Set fixed page size: 80mm width and up to 3276mm height (e.g., for long receipts) */
                     size: 80mm 3276mm;
                     margin: 0;
                 }
@@ -139,6 +153,5 @@ class PdfService {
         </html>
         """.trimIndent()
     }
-
 }
 
