@@ -15,7 +15,7 @@ class PdfService {
         val htmlContent = markdownToHtml(mdContent)
         val styledHtml = generateStyledHtml(htmlContent)
 
-        val tempPdfFile = File.createTempFile("md2thermal", ".pdf")
+        val tempPdfFile = File.createTempFile("bonmd", ".pdf")
 
         try {
             FileOutputStream(tempPdfFile).use { outputStream ->
