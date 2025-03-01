@@ -1,9 +1,8 @@
 package de.kingsware.bonmd
 
-import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder
+import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import org.apache.pdfbox.pdmodel.PDDocument
-import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
 import java.io.File
@@ -19,38 +18,35 @@ class PdfService {
         val tempPdfFile = File.createTempFile("md2thermal", ".pdf")
 
         try {
-            val outputStream = FileOutputStream(tempPdfFile)
-            val builder = PdfRendererBuilder()
+            FileOutputStream(tempPdfFile).use { outputStream ->
+                val builder = PdfRendererBuilder()
 
-            // Lade Schriftarten aus src/main/resources
-            val fontRegular = ClassPathResource("MesloLGS NF Regular.ttf").inputStream
-            val fontBold = ClassPathResource("MesloLGS NF Bold.ttf").inputStream
-            val fontItalic = ClassPathResource("MesloLGS NF Italic.ttf").inputStream
-            val fontBoldItalic = ClassPathResource("MesloLGS NF Bold Italic.ttf").inputStream
+                // Schriftarten aus src/main/resources laden
+                val fontRegular = ClassPathResource("MesloLGS NF Regular.ttf").inputStream
+                val fontBold = ClassPathResource("MesloLGS NF Bold.ttf").inputStream
+                val fontItalic = ClassPathResource("MesloLGS NF Italic.ttf").inputStream
+                val fontBoldItalic = ClassPathResource("MesloLGS NF Bold Italic.ttf").inputStream
 
-            // Schriftarten korrekt registrieren
-            builder.useFont({ fontRegular }, "MesloLGS", 400, BaseRendererBuilder.FontStyle.NORMAL, true)
-            builder.useFont({ fontBold }, "MesloLGS", 700, BaseRendererBuilder.FontStyle.NORMAL, true)
-            builder.useFont({ fontItalic }, "MesloLGS", 400, BaseRendererBuilder.FontStyle.ITALIC, true)
-            builder.useFont({ fontBoldItalic }, "MesloLGS", 700, BaseRendererBuilder.FontStyle.ITALIC, true)
+                // Schriftarten korrekt registrieren
+                builder.useFont({ fontRegular }, "MesloLGS", 400, BaseRendererBuilder.FontStyle.NORMAL, true)
+                builder.useFont({ fontBold }, "MesloLGS", 700, BaseRendererBuilder.FontStyle.NORMAL, true)
+                builder.useFont({ fontItalic }, "MesloLGS", 400, BaseRendererBuilder.FontStyle.ITALIC, true)
+                builder.useFont({ fontBoldItalic }, "MesloLGS", 700, BaseRendererBuilder.FontStyle.ITALIC, true)
 
-            builder.useFastMode()
-            builder.withHtmlContent(styledHtml, null)
-            builder.toStream(outputStream)
-            builder.run()
-            outputStream.close()
-
-            PDDocument.load(tempPdfFile).use { pdfDocument ->
-                pdfDocument.pages.forEach { page ->
-                    page.mediaBox = PDRectangle(226.77f, page.mediaBox.height)
-                }
-
-                val finalPdfFile = File.createTempFile("md2thermal_final", ".pdf")
-                pdfDocument.save(finalPdfFile)
-                return finalPdfFile
+                // HTML rendern
+                builder.useFastMode()
+                builder.withHtmlContent(styledHtml, null)
+                builder.toStream(outputStream)
+                builder.run()
             }
+
+            // Zweiter Schritt (Seitenanpassung) entfällt – wir rendern direkt mit 80mm x 3276mm
+            // und geben die Datei direkt zurück
+            return tempPdfFile
+
         } finally {
-            tempPdfFile.delete()
+            // Falls nötig, temporäre Datei löschen (hier auskommentiert, um das Ergebnis zu behalten)
+            // tempPdfFile.delete()
         }
     }
 
@@ -70,7 +66,8 @@ class PdfService {
             <meta charset="UTF-8"/>
             <style>
                 @page {
-                    size: 80mm auto;
+                    /* Direkt auf 80mm Breite und 3276mm Höhe (bspw. sehr lange Quittung) */
+                    size: 80mm 3276mm;
                     margin: 0;
                 }
                 body {
@@ -117,10 +114,10 @@ class PdfService {
                     font-style: italic;
                 }
                 blockquote {
-                    border-left: 1.5mm solid black; /* Schmale, schwarze vertikale Linie */
+                    border-left: 1.5mm solid black;
                     padding-left: 3mm;
                     margin: 0 0 5mm 0;
-                    color: black; /* Schwarze Schriftfarbe für Zitate */
+                    color: black;
                 }
                 table {
                     width: 100%;
@@ -132,8 +129,7 @@ class PdfService {
                     text-align: left;
                 }
                 a:link, a:visited, a:hover, a:active {
-                    color: black; /* Schwarze Schriftfarbe für Links */
-                    text-decoration: none; /* Entfernt die Unterstreichung */
+                    color: black;
                 }
             </style>
         </head>
