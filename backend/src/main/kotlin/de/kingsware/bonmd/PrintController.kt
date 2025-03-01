@@ -14,7 +14,13 @@ class PrintController(
     @PostMapping("/printMarkdown")
     @ResponseStatus(HttpStatus.OK)
     fun printMarkdown(@RequestBody markdownContent: String) {
-        val pdfFile: File = pdfService.convertMarkdownToPdf(markdownContent)
-        printService.printPdf(pdfFile)
+        val tempPdfFile = File.createTempFile("bonmd", ".pdf") // Create a temporary PDF file
+        try {
+            pdfService.convertMarkdownToPdf(markdownContent, tempPdfFile)
+            printService.printPdf(tempPdfFile)
+        }
+        finally {
+            tempPdfFile.delete()
+        }
     }
 }

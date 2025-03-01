@@ -16,42 +16,34 @@ class PdfService {
      * @param mdContent The Markdown content to be converted.
      * @return A temporary PDF file.
      */
-    fun convertMarkdownToPdf(mdContent: String): File {
+    fun convertMarkdownToPdf(mdContent: String, tempPdfFile: File): File {
         val htmlContent = markdownToHtml(mdContent) // Convert Markdown to HTML
         val styledHtml = generateStyledHtml(htmlContent) // Apply styling to the HTML
 
-        val tempPdfFile = File.createTempFile("bonmd", ".pdf") // Create a temporary PDF file
+        FileOutputStream(tempPdfFile).use { outputStream ->
+            val builder = PdfRendererBuilder()
 
-        try {
-            FileOutputStream(tempPdfFile).use { outputStream ->
-                val builder = PdfRendererBuilder()
+            // Load font files from the classpath (resources folder)
+            val fontRegular = ClassPathResource("MesloLGS NF Regular.ttf").inputStream
+            val fontBold = ClassPathResource("MesloLGS NF Bold.ttf").inputStream
+            val fontItalic = ClassPathResource("MesloLGS NF Italic.ttf").inputStream
+            val fontBoldItalic = ClassPathResource("MesloLGS NF Bold Italic.ttf").inputStream
 
-                // Load font files from the classpath (resources folder)
-                val fontRegular = ClassPathResource("MesloLGS NF Regular.ttf").inputStream
-                val fontBold = ClassPathResource("MesloLGS NF Bold.ttf").inputStream
-                val fontItalic = ClassPathResource("MesloLGS NF Italic.ttf").inputStream
-                val fontBoldItalic = ClassPathResource("MesloLGS NF Bold Italic.ttf").inputStream
+            // Register fonts for PDF rendering
+            builder.useFont({ fontRegular }, "MesloLGS", 400, BaseRendererBuilder.FontStyle.NORMAL, true)
+            builder.useFont({ fontBold }, "MesloLGS", 700, BaseRendererBuilder.FontStyle.NORMAL, true)
+            builder.useFont({ fontItalic }, "MesloLGS", 400, BaseRendererBuilder.FontStyle.ITALIC, true)
+            builder.useFont({ fontBoldItalic }, "MesloLGS", 700, BaseRendererBuilder.FontStyle.ITALIC, true)
 
-                // Register fonts for PDF rendering
-                builder.useFont({ fontRegular }, "MesloLGS", 400, BaseRendererBuilder.FontStyle.NORMAL, true)
-                builder.useFont({ fontBold }, "MesloLGS", 700, BaseRendererBuilder.FontStyle.NORMAL, true)
-                builder.useFont({ fontItalic }, "MesloLGS", 400, BaseRendererBuilder.FontStyle.ITALIC, true)
-                builder.useFont({ fontBoldItalic }, "MesloLGS", 700, BaseRendererBuilder.FontStyle.ITALIC, true)
-
-                // Configure the PDF renderer
-                builder.useFastMode() // Enable faster rendering
-                builder.withHtmlContent(styledHtml, null) // Set the HTML content
-                builder.toStream(outputStream) // Output to the file stream
-                builder.run() // Execute the PDF generation
-            }
-
-            // Skip additional processing (e.g., page size adjustments) and return the file directly
-            return tempPdfFile
-
-        } finally {
-            // Delete the temporary file if necessary (not ideal, as it will be deleted before returning)
-            tempPdfFile.delete()
+            // Configure the PDF renderer
+            builder.useFastMode() // Enable faster rendering
+            builder.withHtmlContent(styledHtml, null) // Set the HTML content
+            builder.toStream(outputStream) // Output to the file stream
+            builder.run() // Execute the PDF generation
         }
+
+        // Skip additional processing (e.g., page size adjustments) and return the file directly
+        return tempPdfFile
     }
 
     /**

@@ -7,21 +7,17 @@ import java.io.File
 class PrintService {
 
     private val printerName = System.getenv("PRINTER_NAME")
-        ?: throw IllegalStateException("Umgebungvariable PRINTER_NAME ist nicht gesetzt.")
+        ?: throw IllegalStateException("Environment variable PRINTER_NAME not set.")
 
     fun printPdf(pdfFile: File) {
-        try {
-            val process = ProcessBuilder("lpr", "-P", printerName, pdfFile.absolutePath)
-                .redirectErrorStream(true)
-                .start()
+        val process = ProcessBuilder("lpr", "-P", printerName, pdfFile.absolutePath)
+            .redirectErrorStream(true)
+            .start()
 
-            val exitCode = process.waitFor()
-            if (exitCode != 0) {
-                val errorMsg = process.inputStream.bufferedReader().readText()
-                throw RuntimeException("Fehler beim Drucken: $errorMsg")
-            }
-        } finally {
-            // pdfFile.delete()
+        val exitCode = process.waitFor()
+        if (exitCode != 0) {
+            val errorMsg = process.inputStream.bufferedReader().readText()
+            throw RuntimeException("Error during printing: $errorMsg")
         }
     }
 }
