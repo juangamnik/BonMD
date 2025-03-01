@@ -117,10 +117,10 @@ class PdfService {
                     font-style: italic;
                 }
                 blockquote {
-                    border-left: 1.5mm solid #ddd;
+                    border-left: 1.5mm solid black; /* Schmale, schwarze vertikale Linie */
                     padding-left: 3mm;
                     margin: 0 0 5mm 0;
-                    color: #666;
+                    color: black; /* Schwarze Schriftfarbe für Zitate */
                 }
                 table {
                     width: 100%;
@@ -131,6 +131,10 @@ class PdfService {
                     padding: 2mm;
                     text-align: left;
                 }
+                a:link, a:visited, a:hover, a:active {
+                    color: black; /* Schwarze Schriftfarbe für Links */
+                    text-decoration: none; /* Entfernt die Unterstreichung */
+                }
             </style>
         </head>
         <body>
@@ -139,5 +143,6 @@ class PdfService {
         </html>
         """.trimIndent()
     }
+
 }
 
