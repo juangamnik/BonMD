@@ -1,0 +1,10 @@
+{
+  "id": "send-markdown-http",
+  "name": "Send Markdown HTTP",
+  "version": "1.0.0",
+  "minAppVersion": "1.0.0",
+  "description": "Send current markdown file via HTTP POST to a configured endpoint.",
+  "author": "Your Name",
+  "authorUrl": "https://example.com",
+  "isDesktopOnly": false
+}
