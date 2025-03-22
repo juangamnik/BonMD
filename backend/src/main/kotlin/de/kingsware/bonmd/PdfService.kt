@@ -7,6 +7,10 @@ import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
 import java.io.File
 import java.io.FileOutputStream
+import com.vladsch.flexmark.parser.Parser
+import com.vladsch.flexmark.html.HtmlRenderer
+import com.vladsch.flexmark.ext.tables.TablesExtension
+import com.vladsch.flexmark.util.data.MutableDataSet
 
 @Service
 class PdfService {
@@ -47,16 +51,19 @@ class PdfService {
     }
 
     /**
-     * Converts Markdown content to basic HTML.
+     * Converts Markdown content to HTML with table support.
+     *
      * @param mdContent The raw Markdown input.
      * @return HTML representation of the Markdown.
      */
     private fun markdownToHtml(mdContent: String): String {
-        val options = com.vladsch.flexmark.util.data.MutableDataSet().toImmutable() // Configure parser options
-        val parser = com.vladsch.flexmark.parser.Parser.builder().build() // Create a Markdown parser
-        val renderer = com.vladsch.flexmark.html.HtmlRenderer.builder().build() // Create an HTML renderer
-        val document = parser.parse(mdContent) // Parse Markdown into a document
-        return renderer.render(document) // Convert document to HTML
+        val options = MutableDataSet().apply {
+            set(Parser.EXTENSIONS, listOf(TablesExtension.create()))
+        }
+        val parser = Parser.builder(options).build()
+        val renderer = HtmlRenderer.builder(options).build()
+        val document = parser.parse(mdContent)
+        return renderer.render(document)
     }
 
     /**
