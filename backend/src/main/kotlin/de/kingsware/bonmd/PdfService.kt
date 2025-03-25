@@ -133,13 +133,18 @@ class PdfService {
                     color: black;
                 }
                 table {
-                    width: 100%;
+                    width: calc(100% - 1px);
                     border-collapse: collapse;
+                    box-sizing: border-box;
                 }
                 th, td {
                     border: 1px solid black;
                     padding: 2mm;
                     text-align: left;
+                }
+                thead th {
+                    font-weight: bold;
+                    white-space: nowrap;
                 }
                 a:link, a:visited, a:hover, a:active {
                     color: black;
@@ -153,4 +158,3 @@ class PdfService {
         """.trimIndent()
     }
 }
-
