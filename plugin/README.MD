@@ -5,6 +5,8 @@
 - **Optional API Key**: Appends a bearer token header if provided.
 - **Configurable Menu Item**: Customize both the title and icon of the file context menu entry.
 
+![Screenshot](./assets/20250326-bonmd-screen.jpeg)
+
 ## Installation
 
 Since this plugin is **not** available in the Obsidian Community Plugin directory, you have to install it manually:
