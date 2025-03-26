@@ -7,6 +7,8 @@
 
 <img src="./assets/20250326-bonmd-screen.jpeg" alt="Screenshot" style="width:50%;">
 
+This plugin has been coded with AI support.
+
 ## Installation
 
 Since this plugin is **not** available in the Obsidian Community Plugin directory, you have to install it manually:
