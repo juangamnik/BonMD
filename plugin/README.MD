@@ -5,7 +5,7 @@
 - **Optional API Key**: Appends a bearer token header if provided.
 - **Configurable Menu Item**: Customize both the title and icon of the file context menu entry.
 
-![Screenshot](./assets/20250326-bonmd-screen.jpeg)
+<img src="./assets/20250326-bonmd-screen.jpeg" alt="Screenshot" style="width:50%;">
 
 ## Installation
 
