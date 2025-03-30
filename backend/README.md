@@ -82,6 +82,15 @@ In this example:
 - The command substitution `$(cat 'example.md')` injects the content of `example.md` into the request body.
 - The **Content-Type** header is set to `text/plain` since the payload is plain text.
 
+## Roadmap / Issues
+
+- Markdown:
+ - Strike through text
+ - Right table border currently invisible
+ - Adapt table column widths
+ - Better presentation of TODO-Lists
+- Other formats than 80mm endless paper for thermal printers like DIN A4
+
 ## Contributing
 
 Contributions are welcome! To contribute:
