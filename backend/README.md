@@ -85,10 +85,10 @@ In this example:
 ## Roadmap / Issues
 
 - Markdown:
- - Strike through text
- - Right table border currently invisible
- - Adapt table column widths
- - Better presentation of TODO-Lists
+	- Strike through text
+	- Right table border currently invisible
+	- Adapt table column widths
+	- Better presentation of TODO-Lists
 - Other formats than 80mm endless paper for thermal printers like DIN A4
 
 ## Contributing
