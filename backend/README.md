@@ -2,7 +2,7 @@
 
 BonMD - Backend is a Spring Boot microservice written in Kotlin. It converts Markdown (MD) files into PDF documents by rendering Markdown to HTML and then to PDF using pure JVM libraries. LLMs have been used to generate code and documentation for this project.
 
-![[./assets/20250330-thermal-print.jpg]]
+<img src="./assets/20250330-thermal-print.jpg" alt="Screenshot" style="width:75%;">
 
 ## Features
 
